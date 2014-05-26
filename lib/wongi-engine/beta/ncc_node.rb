@@ -14,7 +14,13 @@ module Wongi
       end
 
       def contains? var
-        children.any?{|child| child.contains? var}
+        children.any? do |child|
+          if child.kind_of?( AnySet )
+            child.variants.any?{|cv| cv.introduces_variable?( var ) }
+          else
+            child.contains? var
+          end
+        end
       end
     end
 
